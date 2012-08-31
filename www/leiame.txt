@@ -1,0 +1,134 @@
+***************************************************************************************
+* Universidade de São Paulo - USP
+* Instituto de Matemática e Estatística - IME
+* Curso: Pós Graduação em Ciência da Computação
+* Disciplina: Programação para redes de computadores
+* Professor: Daniel Batista (batista@ime.usp.br)
+* Aluno: Rafael Perazzo Barbosa Mota (perazzo@ime.usp.br)
+* NUSP: 5060192
+*
+* EP1: Servidor HTTP
+* Setembro de 2012
+* Funcionalidades:
+* Métodos: GET E POST
+* Erros: 404 (página não encontrada) e 501 (Método não implementado)
+* Imagens nas páginas
+* Acessa automaticamente o index.html caso seja passada uma pasta na URL
+**************************************************************************************** 
+
+DOCUMENTAÇÃO
+
+****************************************************************************************
+
+1. Introdução
+_________________________________________________________________________________________	
+	______________________________________________________
+	|Pré-requisitos: Sistema GNU/Linux com compilador gcc.|
+	|_____________________________________________________| 
+	
+	A aplicação foi desenvolvida em GNU/Linux Ubuntu 12.04, com IDE CodeBlocks 10.05. 
+	Não é compatível com o SO MS-Windows. 
+	_________________________________________________________
+	|Compilando a aplicação: No terminal (ou shell) digite: |
+	|_______________________________________________________|
+	>> make
+	O comando "make" automaticamente irá compilar da forma correta o arquivo ep1-RafaelPerazzo.c
+	(conforme definido no arquivo MakeFile) e será gerado um executavel com nome "ep1-RafaelPerazzo".
+
+	________________________________________________________
+	|Execução: No terminal (ou shell) digite:              | 
+	|______________________________________________________|
+	>>./ep1-RafaelPerazzo 8000 
+
+	(a porta pode ser escolhida conforme desejado)
+
+	Após a execução, a aplicação está pronta para receber pedidos de páginas (GET) e 
+envio de dados de formulários (POST). Utilize um navegar WEB para testar. 
+
+	Os arquivos a serem servidos pelo servidor WEB devem ser colocados na pasta "www".
+	Para modificação do nome da pasta, deve-se alterar o código fonte e rodar novamente
+o comando "make". A linha que deve ser modificada, caso desejável é:
+
+#define DIR_ROOT    "www"			
+
+
+****************************************************************************************
+
+2. O protocolo HTTP
+_________________________________________________________________________________________
+
+	 O HyperText Transfer Protocol é um protocolo de aplicação responsável pelo tratamento de 
+pedidos e respostas entre cliente e servidor na World Wide Web. Ele surgiu da necessidade de 
+distribuir informações pela Internet e para que essa distribuição fosse possível foi necessário 
+criar uma forma padronizada de comunicação entre os clientes e os servidores da Web e entendida 
+por todos os computadores ligados à Internet. Com isso, o protocolo HTTP passou a ser utilizado 
+para a comunicação entre computadores na Internet e a especificar como seriam realizadas as 
+transacções entre clientes e servidores, através do uso de regras básicas.
+	
+	O protocolo HTTP faz a comunicação entre o cliente e o servidor por meio de mensagens. 
+O cliente envia uma mensagem de requisição de um recurso e o servidor envia uma mensagem de 
+resposta ao cliente com a solicitação. 
+	
+	Uma mensagem, tanto de requisição quanto de resposta, é composta, conforme definido 
+na RFC 2616, por uma linha inicial, nenhuma ou mais linhas de cabeçalhos, uma linha em 
+branco obrigatória finalizando o cabeçalho e por fim o corpo da mensagem, opcional em 
+determinados casos. 
+
+Fonte: Wikipedia
+
+****************************************************************************************
+
+3. Implementação
+_________________________________________________________________________________________
+
+	O servidor WEB desenvolvido foi implementado seguindo as especificações da RFC
+do protocolo HTTP1.1. Dessa forma o servidor inicia esperando uma requisição do cliente com
+o comando: "Request client_request = readRequest(cliente);". A função readRequest(cliente)
+grava a solicitação do cliente, e mostra na tela. Posteriormente o servidor verifica 
+a solicitação, checando se o arquivo existe, e se o método solicitado existe. Neste momento
+o servidor guarda o código da solicitação (404, 200 ou 501). Caso o código verificado seja
+o 404 ou 501, uma página de erro é enviada ao usuário. Caso contrário, a página solicitada
+é enviada, assim como quaisquer arquivos relacionados (imagens). Caso a solicitação seja
+um GET, o(s) recurso(s) é(são) enviado(s). Caso seja um POST, o servidor pega a última
+linha da requisição (que contém os dados POST), e mostra em uma página para o usuário, conforme
+solicitado no enunciado do EP.
+
+	Em resumo, estão implementadas e documentadas as seguintes funcionalidades: 
+
+	1) Servir arquivos via GET, inclusive com imagens, respondendo conforme o Apache. 
+	(métodos: httpHeader, sendFile, readRequest, checkRequest, sendGetRequest,getMymeType)
+	2) Mostrar página de erro caso o recurso não exista. (métodos: returnErro)
+	3) Mostrar página de erro caso o método solicitado não exista. (métodos: returnErro)
+	4) Processar requisições de formulários POST. (métodos: sendPostRequest)
+
+	____________________________________________________________________________	
+	| Todo o código está devidamente documentado, com detalhes da implementação.|
+	|___________________________________________________________________________|
+
+****************************************************************************************
+
+4. Conclusões
+_________________________________________________________________________________________
+
+	A implementação de um servidor WEB, requer muitos cuidados na implementação, por mais
+que o protocolo seja de fácil entendimento. As mensagens devem ser corretamente manipuladas,
+com a utilização de funções de string e manipulação de arquivos. 
+	A implementação, com divisão em funções auxiliou bastante o entendimento do problema, 
+assim como enriqueceu o aprendizado em implementação de aplicações de redes utilizando sockets. 
+
+****************************************************************************************
+
+5. Bibliografia utilizada
+_________________________________________________________________________________________
+
+	STEVENS, Programação de rede Unix: API para soquetes de rede. Volume 1. 
+
+****************************************************************************************
+
+****************************************************************************************
+
+6. Executando o servidor online
+
+Em qualquer navegador WEB acesse o endereço: http://godzilla.ime.usp.br:8000
+O servidor implementado está em funcionamento no endereço acima. 
+_________________________________________________________________________________________
